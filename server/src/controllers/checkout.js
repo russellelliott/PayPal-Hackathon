@@ -10,7 +10,7 @@ const { setState } = require('../utils/state.js');
 async function renderCheckout(req, res) {
   const sdkUrl = getPayPalSdkUrl();
   const clientToken = await getClientToken();
-  const amount = getRandomAmount();
+  const amount = await getRandomAmount();
   
   setState('checkout-amount', amount);
 

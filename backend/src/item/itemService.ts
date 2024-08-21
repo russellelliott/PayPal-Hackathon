@@ -39,13 +39,28 @@ export class ItemService {
 
     // Add an item to the shopping cart
     public async addShoppingCartItem(itemId: number, quantity: number): Promise<ShoppingCartItem> {
-        const insertQuery = `
-            INSERT INTO shopping_cart (item_id, quantity)
-            VALUES ($1, $2)
-            RETURNING *`;
-        const insertValues = [itemId, quantity];
-        const { rows } = await pool.query(insertQuery, insertValues);
-        return rows[0];
+        const checkQuery = 'SELECT * FROM shopping_cart WHERE item_id = $1';
+        const { rows: existingRows } = await pool.query(checkQuery, [itemId]);
+
+        if (existingRows.length > 0) {
+            // Item exists, update the quantity
+            const newQuantity = existingRows[0].quantity + quantity;
+            const updateQuery = `
+                UPDATE shopping_cart
+                SET quantity = $1
+                WHERE item_id = $2
+                RETURNING *`;
+            const { rows: updatedRows } = await pool.query(updateQuery, [newQuantity, itemId]);
+            return updatedRows[0];
+        } else {
+            // Item does not exist, insert new
+            const insertQuery = `
+                INSERT INTO shopping_cart (item_id, quantity)
+                VALUES ($1, $2)
+                RETURNING *`;
+            const { rows: insertedRows } = await pool.query(insertQuery, [itemId, quantity]);
+            return insertedRows[0];
+        }
     }
 
     // Update the quantity of an item in the shopping cart

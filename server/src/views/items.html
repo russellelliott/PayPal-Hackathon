@@ -24,13 +24,13 @@
 
     <script>
         const apiBaseUrl = 'http://localhost:3010/api/v0'; // Adjust the base URL as needed
-
+    
         // Function to fetch and load store items into the HTML
         async function loadStoreItems() {
             try {
                 const response = await fetch(`${apiBaseUrl}/items/store`);
                 const items = await response.json();
-
+    
                 const itemsContainer = document.getElementById("store-items");
                 itemsContainer.innerHTML = ''; // Clear existing items
                 items.forEach(item => {
@@ -47,25 +47,25 @@
                 console.error('Error fetching store items:', error);
             }
         }
-
+    
         // Function to fetch and load cart items into the HTML
         async function loadCartItems() {
             try {
                 const response = await fetch(`${apiBaseUrl}/items/cart`);
                 const { items, total } = await response.json();
-
+    
                 const cartItemsContainer = document.getElementById("cart-items");
                 cartItemsContainer.innerHTML = ''; // Clear existing cart items
-
+    
                 if (items.length === 0) {
                     cartItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
                     return;
                 }
-
+    
                 items.forEach(item => {
                     const itemDiv = document.createElement("div");
                     itemDiv.innerHTML = `
-                        <p>${item.name} - Quantity: ${item.quantity}</p>
+                        <p>${item.name} - Quantity: <input type="number" value="${item.quantity}" onchange="updateCartItemQuantity(${item.item_id}, this.value)"></p>
                         <p>Price: $${(item.price * item.quantity).toFixed(2)}</p>
                         <button onclick="removeFromCart(${item.item_id})">Remove</button>
                     `;
@@ -76,7 +76,7 @@
                 console.error('Error fetching cart items:', error);
             }
         }
-
+    
         // Function to add an item to the cart
         async function addToCart(itemId) {
             try {
@@ -87,7 +87,7 @@
                     },
                     body: JSON.stringify({ itemId, quantity: 1 })
                 });
-
+    
                 if (response.ok) {
                     loadCartItems(); // Update cart display
                     alert("Item added to cart!");
@@ -98,14 +98,35 @@
                 console.error('Error adding item to cart:', error);
             }
         }
-
+    
+        // Function to update the quantity of an item in the cart
+        async function updateCartItemQuantity(itemId, quantity) {
+            try {
+                const response = await fetch(`${apiBaseUrl}/items/cart`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ itemId, quantity: parseInt(quantity, 10) })
+                });
+    
+                if (response.ok) {
+                    loadCartItems(); // Update cart display
+                } else {
+                    console.error('Error updating cart item quantity:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error updating cart item quantity:', error);
+            }
+        }
+    
         // Function to remove an item from the cart
         async function removeFromCart(itemId) {
             try {
                 const response = await fetch(`${apiBaseUrl}/items/cart?itemId=${itemId}`, {
                     method: 'DELETE'
                 });
-
+    
                 if (response.ok) {
                     loadCartItems(); // Update cart display
                     alert("Item removed from cart!");
@@ -116,13 +137,14 @@
                 console.error('Error removing item from cart:', error);
             }
         }
-
+    
         // Load store and cart items on page load
         window.onload = () => {
             loadStoreItems();
             loadCartItems();
         };
     </script>
+    
 </body>
 
 </html>
