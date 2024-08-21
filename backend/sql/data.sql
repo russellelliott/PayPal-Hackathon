@@ -1,15 +1,11 @@
-DELETE FROM textblocks;
+DELETE FROM store_items;
 
---Insert Header
-INSERT INTO textblocks (id, type, content, timestamp) VALUES (gen_random_uuid(), 'h1', 'Welcome to our Website', CURRENT_TIMESTAMP);
-
--- Insert Paragraph
-INSERT INTO textblocks (id, type, content, timestamp) VALUES (gen_random_uuid(), 'p', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam lobortis hendrerit ipsum, vel mattis erat.', CURRENT_TIMESTAMP);
-
-DELETE FROM imageblocks;
-
--- Inserting an image
-INSERT INTO imageblocks (id, height, width, src, timestamp) VALUES (gen_random_uuid(), 600, 800, 'https://example.com/images/example.jpg', CURRENT_TIMESTAMP);
-
--- Inserting another image
-INSERT INTO imageblocks (id, height, width, src, timestamp) VALUES (gen_random_uuid(), 400, 600, 'https://example.com/images/another-example.png', CURRENT_TIMESTAMP);
+INSERT INTO store_items (id, name, price, img_name) VALUES (1, 'Rear Spoiler', 81.99, 'rear_spoiler.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (2, 'Turbo Charger', 1551.45, 'turbo_charger.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (3, 'Car Radiator', 300.00, 'car_radiator.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (4, 'Fuel Pump', 160.00, 'fuel_pump.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (5, 'Display Unit', 239.99, 'display_unit.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (6, 'Racing Steering Wheel', 169.99, 'steering_wheel.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (7, 'Racing Seats', 699.99, 'racing_seats.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (8, 'Hand Brake', 49.99, 'hand_brake.png');
+INSERT INTO store_items (id, name, price, img_name) VALUES (9, 'Boost Gauge', 54.32, 'boost_gauge.jpg');
