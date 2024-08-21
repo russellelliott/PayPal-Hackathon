@@ -16,11 +16,25 @@ export class ItemService {
         return rows.length > 0 ? rows[0] : null;
     }
 
-    // Fetch all shopping cart items
-    public async getShoppingCartItems(): Promise<ShoppingCartItem[]> {
-        const query = 'SELECT * FROM shopping_cart';
+    // Fetch all shopping cart items with their details and calculate the total price
+    public async getShoppingCartItems(): Promise<{ items: ShoppingCartItem[], total: number }> {
+        const query = `
+            SELECT shopping_cart.item_id, shopping_cart.quantity, store_items.name, store_items.price
+            FROM shopping_cart
+            JOIN store_items ON shopping_cart.item_id = store_items.id
+        `;
         const { rows } = await pool.query(query);
-        return rows;
+        
+        // Calculate total price
+        let total = 0;
+        rows.forEach((item: any) => {
+            total += item.price * item.quantity;
+        });
+
+        return {
+            items: rows,
+            total: total
+        };
     }
 
     // Add an item to the shopping cart

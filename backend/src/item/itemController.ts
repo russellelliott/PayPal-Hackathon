@@ -29,7 +29,7 @@ export class ItemController extends Controller {
 
     @Get('/cart')
     @Response('404', 'ShoppingCartItem not found')
-    public async getShoppingCartItems(): Promise<ShoppingCartItem[]> {
+    public async getShoppingCartItems(): Promise<{ items: ShoppingCartItem[], total: number }> {
         return new ItemService().getShoppingCartItems();
     }
 
