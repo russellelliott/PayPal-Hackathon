@@ -59,8 +59,17 @@ async function renderSuccess(req, res) {
   res.render("success");
 }
 
+async function renderItems(req, res) {
+  const locals = {
+    title: "Fastlane - Store Items" 
+  };
+
+  res.render("items", locals);
+}
+
 module.exports = {
   renderCheckout,
   renderCheckoutWithShippingSection,
-  renderSuccess
+  renderSuccess,
+  renderItems
 };
